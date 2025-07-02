@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../src/Firebase/FirebaseConfig";
-import { collection, getDocs, doc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, addDoc, deleteDoc, setDoc } from "firebase/firestore";
 import "./PendingOrders.css";
 
 const PendingOrders = () => {
@@ -30,24 +30,56 @@ const PendingOrders = () => {
 
   const handleConfirm = async (order) => {
     try {
+      // 1. Move to 'confirmedOrders'
       await addDoc(collection(db, "confirmedOrders"), order);
+  
+      // 2. Move to user's pastOrders with status "confirmed"
+      if (order.userId) {
+        const userPastOrderRef = doc(db, "userOrders", order.userId, "pastOrders", order.id);
+        await setDoc(userPastOrderRef, {
+          ...order,
+          status: "confirmed",
+          timestamp: order.timestamp || new Date(),
+        });
+      }
+  
+      // 3. Delete from 'payments'
       await deleteDoc(doc(db, "payments", order.id));
+      await deleteDoc(doc(db, "userOrders", order.userId,"currentOrders", order.id));
+  
+      // 4. Update local state
       setOrders(orders.filter((o) => o.id !== order.id));
     } catch (error) {
       console.error("Error confirming order:", error);
     }
   };
-
+  
   const handleCancel = async (order) => {
     try {
+      // 1. Move to 'canceledOrders'
       await addDoc(collection(db, "canceledOrders"), order);
+  
+      // 2. Move to user's pastOrders with status "canceled"
+      if (order.userId) {
+        const userPastOrderRef = doc(db, "userOrders", order.userId, "pastOrders", order.id);
+        await setDoc(userPastOrderRef, {
+          ...order,
+          status: "canceled",
+          timestamp: order.timestamp || new Date(),
+        });
+      }
+  
+      // 3. Delete from 'payments'
       await deleteDoc(doc(db, "payments", order.id));
+      await deleteDoc(doc(db, "userOrders", order.userId,"currentOrders", order.id));
+  
+      // 4. Update local state
       setOrders(orders.filter((o) => o.id !== order.id));
     } catch (error) {
       console.error("Error canceling order:", error);
     }
   };
-
+  
   return (
     <div className="orders-container">
       <nav className="navbar">

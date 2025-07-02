@@ -1,0 +1,15 @@
+/* LocationSelectionScreen.css */
+.location-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+  }
+  
+  .location-container button {
+    padding: 12px 24px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  

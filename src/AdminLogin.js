@@ -16,7 +16,7 @@ const AdminLogin = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       if (userCredential.user.email === "admin@gmail.com") {
-        navigate("/food-list");
+        navigate("/location-select");
       } else {
         alert("Access Denied. Only admin can login.");
         auth.signOut();

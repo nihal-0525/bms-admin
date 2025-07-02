@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth, db } from "../src/Firebase/FirebaseConfig";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
+import { useLocation } from "./LocationContext"; // ✅ Import context
 import "./FoodList.css";
 
 const FoodList = () => {
@@ -12,16 +13,21 @@ const FoodList = () => {
   const [editData, setEditData] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
 
+  const { locationId } = useLocation(); // ✅ Get selected location (e.g., "FoodData")
   const navigate = useNavigate();
+
   const documentNames = ["1new", "2new", "3new", "4new"];
 
   useEffect(() => {
     const fetchFoodData = async () => {
+      if (!locationId) return;
+
+      setLoading(true);
       try {
         let allFoodItems = [];
 
         for (const docName of documentNames) {
-          const foodCollectionRef = collection(db, "FoodData", docName, "food");
+          const foodCollectionRef = collection(db, locationId, docName, "food");
           const querySnapshot = await getDocs(foodCollectionRef);
 
           querySnapshot.forEach((docSnap) => {
@@ -42,11 +48,15 @@ const FoodList = () => {
     };
 
     fetchFoodData();
-  }, []);
+  }, [locationId]);
 
   const handleEditClick = (item) => {
-    setEditingId(item.id);
-    setEditData({ ...item });
+    console.log("Editing item:", item);
+    setEditingId(`${item.docName}_${item.id}`);
+    setEditData({
+      ...item,
+      docName: item.docName,
+    });
   };
 
   const handleInputChange = (e, field) => {
@@ -58,14 +68,15 @@ const FoodList = () => {
 
   const handleSave = async () => {
     const { id, docName, FoodName, FoodPrice, FoodImageUrl, InStock } = editData;
+    console.log("Saving editData:", editData);
 
-    if (!id || !docName) {
-      alert("Invalid document reference.");
+    if (!id || !docName || !locationId) {
+      alert("Missing data.");
       return;
     }
 
     try {
-      const foodDocRef = doc(db, "FoodData", docName, "food", id);
+      const foodDocRef = doc(db, locationId, docName, "food", id);
       await updateDoc(foodDocRef, {
         FoodName,
         FoodPrice,
@@ -81,13 +92,9 @@ const FoodList = () => {
       setEditingId(null);
     } catch (error) {
       console.error("Error updating food:", error);
-      alert("Error updating food data. Check console.");
+      alert("Error updating food data.");
     }
   };
-
-  const filteredItems = foodItems.filter((item) =>
-    item.FoodName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const handleLogout = () => {
     signOut(auth).then(() => {
@@ -95,9 +102,12 @@ const FoodList = () => {
     });
   };
 
+  const filteredItems = foodItems.filter((item) =>
+    item.FoodName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="food-list-container">
-      {/* Top Navigation Bar */}
       <div className="top-bar">
         <nav className="navbar">
           <button className="nav-button active">Add/Edit Food Data</button>
@@ -114,9 +124,8 @@ const FoodList = () => {
         <button className="logout-button" onClick={handleLogout}>🚪 Logout</button>
       </div>
 
-      {/* Header */}
       <div className="header">
-        <h1>All Food Items</h1>
+        <h1>{locationId ? `Food for ${locationId}` : "Select Location"}</h1>
         <input
           type="text"
           placeholder="🔍 Search food..."
@@ -127,7 +136,6 @@ const FoodList = () => {
         <button className="add-button" onClick={() => navigate("/add-food")}>➕ Add</button>
       </div>
 
-      {/* Food Table */}
       {loading ? (
         <p>Loading food items...</p>
       ) : (
@@ -152,8 +160,7 @@ const FoodList = () => {
                       className="food-image"
                     />
                   </td>
-
-                  {editingId === item.id ? (
+                  {editingId === `${item.docName}_${item.id}` ? (
                     <>
                       <td>
                         <input
