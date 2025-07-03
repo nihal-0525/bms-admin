@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./Firebase/FirebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { db } from "./Firebase/FirebaseConfig";
+import "./AdminLogin.css"
 
  // Optional for styling
 

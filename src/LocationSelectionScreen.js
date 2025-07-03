@@ -15,8 +15,8 @@ const LocationSelectionScreen = () => {
   return (
     <div className="location-container">
       <h1>Select Your Location</h1>
-      <button onClick={() => selectLocation('FoodData')}>Location A</button>
-      <button onClick={() => selectLocation('FoodData2')}>Location B</button>
+      <button onClick={() => selectLocation('FoodData')}>Vidhyarthi Khaana (Law)</button>
+      <button onClick={() => selectLocation('FoodData2')}>Vidhyarthi Khaana (Sports)</button>
     </div>
   );
 };
