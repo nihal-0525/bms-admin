@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { db } from "./Firebase/FirebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import "./PendingOrders.css";
+import "./CancelledOrders.css";
 
 const CancelledOrders = () => {
   const [orders, setOrders] = useState([]);

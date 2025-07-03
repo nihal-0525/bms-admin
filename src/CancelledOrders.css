@@ -1,0 +1,75 @@
+/* Container centering */
+.orders-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Navbar layout */
+.navbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+
+.nav-button {
+  padding: 10px 16px;
+  border: 2px solid #ff5c5c;
+  background-color: white;
+  color: #ff5c5c;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-button:hover {
+  background-color: #ff5c5c;
+  color: white;
+}
+
+.nav-button.active {
+  background-color: #ff5c5c;
+  color: white;
+}
+
+/* Orders list styling */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Card styling */
+.order-card {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s;
+}
+
+.order-card:hover {
+  border-color: #888;
+}
+
+/* Info styling */
+.order-info p {
+  margin: 6px 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* Status styling */
+.order-actions {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #e74c3c;
+}

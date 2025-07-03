@@ -1,43 +1,235 @@
+/* Container */
 .food-list-container {
-    max-width: 800px;
-    margin: auto;
-    text-align: center;
-  }
-  
-  .food-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .food-table th, .food-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-  }
-  
-  .food-table th {
-    background-color: #f4f4f4;
-  }
-  
-  .food-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .logout-button {
-    padding: 6px 12px;
-    background-color: #ff5252;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 16px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Top bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/* Top-right: aligns Add + Logout button */
+.top-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/* Navigation */
+.navbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-button {
+  background-color: #fff;
+  border: 2px solid #fd5050;
+  color: #fd5050;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-button:hover,
+.nav-button.active {
+  background-color: #fd5050;
+  color: white;
+}
+
+/* Logout button */
+.logout-button {
+  width: 100px;
+  height: 40px;
+  padding: 8px 0;
+  background-color: #fd5050;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+  text-align: center;
+}
+.logout-button,
+.add-button {
+  margin-right: 70px; 
+}
+
+.logout-button:hover {
+  background-color: #e04545;
+}
+
+/* Add button */
+.add-button {
+  width: 100px;
+  height: 40px;
+  padding: 8px 0;
+  background-color: #fd5050;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: center;
+}
+
+.add-button:hover {
+  background-color: #e04545;
+}
+
+/* Header */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.search-bar {
+  flex: 1;
+  max-width: 500px;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.food-table-wrapper {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+  background-color: #fff;
+  margin-top: 20px;
+}
+
+.food-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse; 
+  border: 1px solid #ddd; 
+}
+
+
+.food-table th,
+.food-table td {
+  text-align: left;
+  padding: 14px 10px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.food-table th:nth-child(1),
+.food-table td:nth-child(1) {
+  width: 90px;
+}
+
+.food-table th:nth-child(2),
+.food-table td:nth-child(2) {
+  width: 180px;
+}
+
+.food-table th:nth-child(3),
+.food-table td:nth-child(3) {
+  width: 120px;
+}
+
+.food-table th:nth-child(4),
+.food-table td:nth-child(4) {
+  width: 100px;
+}
+
+.food-table th:nth-child(5),
+.food-table td:nth-child(5) {
+  width: 155px;
+}
+
+.food-image {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.edit-button,
+.save-button,
+.cancel-button {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 2px;
+}
+
+.edit-button {
+  background-color: #fd5050;
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #e04545;
+}
+
+.save-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #3e9f42;
+}
+
+.cancel-button {
+  background-color: #999;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #777;
+}
+.food-table tr {
+  height: 64px; 
+}
+
+.food-table input,
+.food-table select {
+  padding: 6px 10px;
+  font-size: 14px;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
