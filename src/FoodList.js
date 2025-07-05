@@ -51,7 +51,6 @@ const FoodList = () => {
   }, [locationId]);
 
   const handleEditClick = (item) => {
-    console.log("Editing item:", item);
     setEditingId(`${item.docName}_${item.id}`);
     setEditData({
       ...item,
@@ -67,34 +66,38 @@ const FoodList = () => {
   };
 
   const handleSave = async () => {
-    const { id, docName, FoodName, FoodPrice, FoodImageUrl, InStock } = editData;
-    console.log("Saving editData:", editData);
+  const { id, docName, FoodName, FoodPrice, FoodImageUrl, InStock } = editData;
 
-    if (!id || !docName || !locationId) {
-      alert("Missing data.");
-      return;
-    }
+  if (!id || !docName || !locationId) {
+    alert("Missing data.");
+    return;
+  }
 
-    try {
-      const foodDocRef = doc(db, locationId, docName, "food", id);
-      await updateDoc(foodDocRef, {
-        FoodName,
-        FoodPrice,
-        FoodImageUrl,
-        InStock: InStock === "true" || InStock === true,
-      });
+  const inStockBool = InStock === "true" || InStock === true;
 
-      setFoodItems((prev) =>
-        prev.map((item) => (item.id === id ? { ...editData } : item))
-      );
+  try {
+    const foodDocRef = doc(db, locationId, docName, "food", id);
+    await updateDoc(foodDocRef, {
+      FoodName,
+      FoodPrice,
+      FoodImageUrl,
+      InStock: inStockBool,
+    });
 
-      alert("Food item updated successfully!");
-      setEditingId(null);
-    } catch (error) {
-      console.error("Error updating food:", error);
-      alert("Error updating food data.");
-    }
-  };
+    setFoodItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...editData, InStock: inStockBool } : item
+      )
+    );
+
+    alert("Food item updated successfully!");
+    setEditingId(null);
+  } catch (error) {
+    console.error("Error updating food:", error);
+    alert("Error updating food data.");
+  }
+};
+
 
   const handleLogout = () => {
     signOut(auth).then(() => {
@@ -109,6 +112,17 @@ const FoodList = () => {
   return (
     <div className="food-list-container">
       <div className="top-bar">
+        {/* ✅ Location Button (top-left) */}
+        <div className="location-button-wrapper">
+          <button
+            className="location-button"
+            onClick={() => navigate("/location-select")}
+          >
+            📍 {locationId ? locationId : "Select Location"}
+          </button>
+        </div>
+
+        {/* ✅ Navigation Bar */}
         <nav className="navbar">
           <button className="nav-button active">Add/Edit Food Data</button>
           <button className="nav-button" onClick={() => navigate("/pending-orders")}>
@@ -121,9 +135,14 @@ const FoodList = () => {
             Canceled Orders
           </button>
         </nav>
-        <button className="logout-button" onClick={handleLogout}>🚪 Logout</button>
+
+        {/* ✅ Logout Button */}
+        <button className="logout-button" onClick={handleLogout}>
+          🚪 Logout
+        </button>
       </div>
 
+      {/* ✅ Header Section */}
       <div className="header">
         <h1>{locationId ? `Food for ${locationId}` : "Select Location"}</h1>
         <input
@@ -133,9 +152,12 @@ const FoodList = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button className="add-button" onClick={() => navigate("/add-food")}>➕ Add</button>
+        <button className="add-button" onClick={() => navigate("/add-food")}>
+          ➕ Add
+        </button>
       </div>
 
+      {/* ✅ Food Table */}
       {loading ? (
         <p>Loading food items...</p>
       ) : (

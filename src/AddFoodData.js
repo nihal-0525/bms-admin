@@ -2,20 +2,22 @@ import React, { useState } from "react";
 import "./AddFoodData.css";
 import { db } from "../src/Firebase/FirebaseConfig";
 import { addDoc, collection, doc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom"; // ✅ Import this
+import { useNavigate } from "react-router-dom";
 
-const AddFoodData = ({ onBack }) => {
+const AddFoodData = () => {
   const [FoodName, setFoodName] = useState("");
   const [FoodPrice, setFoodPrice] = useState("");
   const [FoodImageUrl, setFoodImageUrl] = useState("");
   const [documentName, setDocumentName] = useState("1new");
+  const [location, setLocation] = useState("FoodData");
+  const [InStock, setInStock] = useState("true"); // ✅ InStock state (string)
 
-  const navigate = useNavigate(); // ✅ Hook call
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!FoodName || !FoodPrice || !documentName) {
+    if (!FoodName || !FoodPrice || !documentName || !location) {
       alert("Please fill all fields");
       return;
     }
@@ -24,21 +26,20 @@ const AddFoodData = ({ onBack }) => {
       FoodName,
       FoodPrice,
       FoodImageUrl,
+      InStock: InStock === "true", // ✅ Convert string to boolean
     };
 
     try {
-      const foodDocRef = doc(db, "FoodData", documentName);
+      const foodDocRef = doc(db, location, documentName);
       await addDoc(collection(foodDocRef, "food"), foodData);
       alert("Food added successfully!");
 
-      // ✅ Clear form fields
       setFoodName("");
       setFoodPrice("");
       setFoodImageUrl("");
       setDocumentName("1new");
-
-      // Optional: Navigate somewhere
-      // navigate("/your-desired-route");
+      setLocation("FoodData");
+      setInStock("true");
     } catch (error) {
       console.error("Error adding food:", error);
       alert("Error adding food data.");
@@ -98,10 +99,39 @@ const AddFoodData = ({ onBack }) => {
           </div>
           <br />
 
+          <div className="form-row">
+            <div className="form-col">
+              <label>Select Location</label>
+              <select
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              >
+                <option value="FoodData">FoodData</option>
+                <option value="FoodData2">FoodData2</option>
+              </select>
+            </div>
+          </div>
+          <br />
+
+          {/* ✅ InStock dropdown */}
+          <div className="form-row">
+            <div className="form-col">
+              <label>In Stock</label>
+              <select
+                value={InStock}
+                onChange={(e) => setInStock(e.target.value)}
+              >
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+          </div>
+          <br />
+
           <button type="submit">Add Food</button>
           <button
             type="button"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/food-list")}
             className="back-button"
           >
             ⬅ Back
