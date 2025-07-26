@@ -13,62 +13,51 @@ const FoodList = () => {
   const [editData, setEditData] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { locationId } = useLocation(); // ✅ Get selected location (e.g., "FoodData")
-  const navigate = useNavigate();
+  const { locationId } = useLocation(); // e.g., "FoodData" or "FoodData2"
+const navigate = useNavigate();
 
-  const documentNames = ["1new", "2new", "3new", "4new"];
+useEffect(() => {
+  const fetchFoodData = async () => {
+    if (!locationId) return;
 
-  useEffect(() => {
-    const fetchFoodData = async () => {
-      if (!locationId) return;
+    setLoading(true);
+    try {
+      const foodCollectionRef = collection(db, locationId); // e.g., collection(db, "FoodData")
+      const querySnapshot = await getDocs(foodCollectionRef);
 
-      setLoading(true);
-      try {
-        let allFoodItems = [];
+      const allFoodItems = querySnapshot.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...docSnap.data(),
+      }));
 
-        for (const docName of documentNames) {
-          const foodCollectionRef = collection(db, locationId, docName, "food");
-          const querySnapshot = await getDocs(foodCollectionRef);
-
-          querySnapshot.forEach((docSnap) => {
-            allFoodItems.push({
-              id: docSnap.id,
-              docName,
-              ...docSnap.data(),
-            });
-          });
-        }
-
-        setFoodItems(allFoodItems);
-      } catch (error) {
-        console.error("Error fetching food data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFoodData();
-  }, [locationId]);
-
-  const handleEditClick = (item) => {
-    setEditingId(`${item.docName}_${item.id}`);
-    setEditData({
-      ...item,
-      docName: item.docName,
-    });
+      setFoodItems(allFoodItems);
+    } catch (error) {
+      console.error("Error fetching food data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleInputChange = (e, field) => {
-    setEditData((prev) => ({
-      ...prev,
-      [field]: e.target.value,
-    }));
-  };
+  fetchFoodData();
+}, [locationId]);
 
-  const handleSave = async () => {
-  const { id, docName, FoodName, FoodPrice, FoodImageUrl, InStock } = editData;
 
-  if (!id || !docName || !locationId) {
+ const handleEditClick = (item) => {
+  setEditingId(item.id); // No more `${docName}_${id}`
+  setEditData({ ...item });
+};
+
+const handleInputChange = (e, field) => {
+  setEditData((prev) => ({
+    ...prev,
+    [field]: e.target.value,
+  }));
+};
+
+const handleSave = async () => {
+  const { id, FoodName, FoodPrice, FoodImageUrl, InStock } = editData;
+
+  if (!id || !locationId) {
     alert("Missing data.");
     return;
   }
@@ -76,7 +65,7 @@ const FoodList = () => {
   const inStockBool = InStock === "true" || InStock === true;
 
   try {
-    const foodDocRef = doc(db, locationId, docName, "food", id);
+    const foodDocRef = doc(db, locationId, id); // No more nested path
     await updateDoc(foodDocRef, {
       FoodName,
       FoodPrice,
@@ -97,6 +86,7 @@ const FoodList = () => {
     alert("Error updating food data.");
   }
 };
+
 
 
   const handleLogout = () => {
@@ -182,7 +172,7 @@ const FoodList = () => {
                       className="food-image"
                     />
                   </td>
-                  {editingId === `${item.docName}_${item.id}` ? (
+                  {editingId ===  item.id ? (
                     <>
                       <td>
                         <input

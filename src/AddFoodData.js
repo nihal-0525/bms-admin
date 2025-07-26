@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import "./AddFoodData.css";
 import { db } from "../src/Firebase/FirebaseConfig";
-import { addDoc, collection, doc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 const AddFoodData = () => {
   const [FoodName, setFoodName] = useState("");
   const [FoodPrice, setFoodPrice] = useState("");
   const [FoodImageUrl, setFoodImageUrl] = useState("");
-  const [documentName, setDocumentName] = useState("1new");
   const [location, setLocation] = useState("FoodData");
-  const [InStock, setInStock] = useState("true"); // ✅ InStock state (string)
+  const [InStock, setInStock] = useState("true");
+  const [Category, setCategory] = useState("Breakfast");
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!FoodName || !FoodPrice || !documentName || !location) {
+    if (!FoodName || !FoodPrice || !location || !Category) {
       alert("Please fill all fields");
       return;
     }
@@ -26,20 +26,22 @@ const AddFoodData = () => {
       FoodName,
       FoodPrice,
       FoodImageUrl,
-      InStock: InStock === "true", // ✅ Convert string to boolean
+      InStock: InStock === "true",
+      Category,
     };
 
     try {
-      const foodDocRef = doc(db, location, documentName);
-      await addDoc(collection(foodDocRef, "food"), foodData);
+      const foodCollectionRef = collection(db, location); // e.g., FoodData
+      await addDoc(foodCollectionRef, foodData);
       alert("Food added successfully!");
 
+      // Reset fields
       setFoodName("");
       setFoodPrice("");
       setFoodImageUrl("");
-      setDocumentName("1new");
       setLocation("FoodData");
       setInStock("true");
+      setCategory("Breakfast");
     } catch (error) {
       console.error("Error adding food:", error);
       alert("Error adding food data.");
@@ -85,22 +87,6 @@ const AddFoodData = () => {
 
           <div className="form-row">
             <div className="form-col">
-              <label>Select Document</label>
-              <select
-                value={documentName}
-                onChange={(e) => setDocumentName(e.target.value)}
-              >
-                <option value="1new">1new</option>
-                <option value="2new">2new</option>
-                <option value="3new">3new</option>
-                <option value="4new">4new</option>
-              </select>
-            </div>
-          </div>
-          <br />
-
-          <div className="form-row">
-            <div className="form-col">
               <label>Select Location</label>
               <select
                 value={location}
@@ -113,7 +99,24 @@ const AddFoodData = () => {
           </div>
           <br />
 
-          {/* ✅ InStock dropdown */}
+          {/* ✅ Category Dropdown */}
+          <div className="form-row">
+            <div className="form-col">
+              <label>Select Category</label>
+              <select
+                value={Category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="Breakfast">Breakfast</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Drinks">Drinks</option>
+              </select>
+            </div>
+          </div>
+          <br />
+
+          {/* ✅ InStock Dropdown */}
           <div className="form-row">
             <div className="form-col">
               <label>In Stock</label>
