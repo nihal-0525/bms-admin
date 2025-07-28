@@ -92,8 +92,8 @@ const AddFoodData = () => {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               >
-                <option value="Vidhyarthi Khaana (Law)">Vidhyarthi Khaana (Law)</option>
-                <option value="Vidhyarthi Khaana (Sports)">Vidhyarthi Khaana (Sports)</option>
+                <option value="FoodData">Vidhyarthi Khaana (Law)</option>
+                <option value="FoodData2">Vidhyarthi Khaana (Sports)</option>
               </select>
             </div>
           </div>

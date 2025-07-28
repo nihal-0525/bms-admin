@@ -130,7 +130,11 @@ const PendingOrders = () => {
       </nav>
 
       <h1>
-        {locationId ? `Pending Orders for ${locationId}` : "Select a Location"}
+        {locationId ? `Pending Orders for ${locationId === "FoodData"
+        ? "Law Canteen"
+        : locationId === "FoodData2"
+        ? "Sports Canteen"
+        : "Select Location"}` : "Select a Location"}
       </h1>
 
       <div className="orders-list">

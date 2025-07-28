@@ -50,7 +50,11 @@ const CancelledOrders = () => {
         <button className="nav-button active">Canceled Orders</button>
       </nav>
 
-      <h1>{locationId ? `Canceled Orders for ${locationId}` : "Select a Location"}</h1>
+      <h1>{locationId ? `Canceled Orders for ${locationId === "FoodData"
+        ? "Law Canteen"
+        : locationId === "FoodData2"
+        ? "Sports Canteen"
+        : "Select Location"}` : "Select a Location"}</h1>
 
       <div className="orders-list">
         {orders.length > 0 ? (

@@ -108,7 +108,11 @@ const handleSave = async () => {
             className="location-button"
             onClick={() => navigate("/location-select")}
           >
-            📍 {locationId ? locationId : "Select Location"}
+            📍 {locationId === "FoodData"
+        ? "Law Canteen"
+        : locationId === "FoodData2"
+        ? "Sports Canteen"
+        : "Select Location"}
           </button>
         </div>
 
@@ -134,7 +138,11 @@ const handleSave = async () => {
 
       {/* ✅ Header Section */}
       <div className="header">
-        <h1>{locationId ? `Food for ${locationId}` : "Select Location"}</h1>
+        <h1>{locationId ? `Food for ${locationId === "FoodData"
+        ? "Law Canteen"
+        : locationId === "FoodData2"
+        ? "Sports Canteen"
+        : "Select Location"}` : "Select Location"}</h1>
         <input
           type="text"
           placeholder="🔍 Search food..."
